@@ -12,7 +12,7 @@
 
 Since **React Native 0.60** and higher, [autolinking](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md) makes the installation process simpler.
 
-On iOS you have to run `cd ios/` && `pod install`. 
+On iOS you have to run `cd ios/` && `pod install`.
 
 On Android the package is automatically linked.
 
@@ -46,7 +46,9 @@ maven{
     url 'https://mvn.jwplayer.com/content/repositories/releases/'
 }
 ```
+
 As so
+
 ```
 allprojects {
     repositories {
@@ -189,7 +191,7 @@ componentDidMount() {
   /*
   setTimeout(() => {
     this.JWPlayer.loadPlaylistItem(playlistItem);
-    
+
     // for playlist
     // const playlist = [playlistItem, playlistItem]
     // this.JWPlayer.loadPlaylist(playlistItem);
@@ -245,7 +247,16 @@ For running example project:
 4. Open `demoJWPlayer.xcworkspace` with XCode.
 5. Add your iOS api key for JWPlayer into `Info.plist`
 
+##### DRM
+
+| Prop                    | Description                                                                  | Type     |
+| ----------------------- | ---------------------------------------------------------------------------- | -------- |
+| **`licenseServer`**     | The license server e.g. `https://fps.ezdrm.com/api/licenses/xxxx-xxxx-xxxx`. | `string` |
+| **`certificateServer`** | The certificate/application id server.                                       | `string` |
+| **`assetId`**           | The assetId id.                                                              | `string` |
+
 ##### PlaylistItem
+
 | Prop                         | Description                                                                                                                                                                                      | Type                            |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
 | **`mediaId`**                | The JW media id.                                                                                                                                                                                 | `Int`                           |
@@ -266,16 +277,18 @@ For running example project:
 | **`backgroundAudioEnabled`** | Should the player continue playing in the background. **Note when this is true this prop will add the player controls on the lock screen in iOS and in Notification Center in Android as well.** | `Boolean`                       |
 
 ##### JWPlayerAdClients
-  | Client                     | Value |
-  | -------------------------- | ----- |
-  | **`JWAdClientGoogima`**    | 1     |
-  | **`JWAdClientGoogimaDAI`** | 2     |
-  | **`JWAdClientFreewheel`**  | 3     |
-  | **`JWAdClientVast`**       | 4     |
+
+| Client                     | Value |
+| -------------------------- | ----- |
+| **`JWAdClientGoogima`**    | 1     |
+| **`JWAdClientGoogimaDAI`** | 2     |
+| **`JWAdClientFreewheel`**  | 3     |
+| **`JWAdClientVast`**       | 4     |
 
 ##### JWPlayerState
 
 #### **iOS**
+
 | State                        | Value |
 | ---------------------------- | ----- |
 | **`JWPlayerStatePlaying`**   | 0     |
@@ -286,6 +299,7 @@ For running example project:
 | **`JWPlayerStateError`**     | 5     |
 
 #### **Android**
+
 | State                        | Value |
 | ---------------------------- | ----- |
 | **`JWPlayerStateIdle`**      | 0     |
@@ -296,6 +310,7 @@ For running example project:
 | **`JWPlayerStateError`**     | null  |
 
 ## Available props
+
 | Prop                           | Description                                                                                                                                                            | Type                                                |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
 | **`mediaId`**                  | The JW media id.                                                                                                                                                       | `Int`                                               |
@@ -311,6 +326,7 @@ For running example project:
 | **`displayTitle`**             | Should the player show the title.                                                                                                                                      | `Boolean`                                           |
 | **`playlistItem`**             | An object of playlistItem shape.                                                                                                                                       | [PlaylistItem](#PlaylistItem)                       |
 | **`playlist`**                 | An array of playlistItems.                                                                                                                                             | `[playlistItem]` see [PlaylistItem](#PlaylistItem)] |
+| **`drm`**                      | An object of drm shape.                                                                                                                                                | `[drm]` see [DRM](#DRM)]                            |
 | **`nextUpDisplay`**            | Should the player show the next up item in a playlist.                                                                                                                 | `Boolean`                                           |
 | **`playerStyle`**              | Name of css file you put in the Main Bundle for you custom style. See below [Custom-style](#Custom-style) section.                                                     | `String`                                            |
 | **`colors`**                   | Object with colors in hex format (without hashtag), for the icons and progress bar See below [Colors](#Colors) section.                                                | `Object`                                            |
@@ -365,13 +381,13 @@ For running example project:
 
 For setting a custom style on the player:
 
-  1. Check out the [JW player guide](https://developer.jwplayer.com/jw-player/docs/developer-guide/customization/css-skinning/skins_reference/) for adding a custom css file on your player.
-  
-  2. Put your custom css file in the root folder of your native files.
-  
-  3. Add the prop `playerStyle` to the player and set to the name of your css file without the .css file type e.g. `playerStyle={'myCssFile'}`.
-  
-  4. build & run.
+1. Check out the [JW player guide](https://developer.jwplayer.com/jw-player/docs/developer-guide/customization/css-skinning/skins_reference/) for adding a custom css file on your player.
+
+2. Put your custom css file in the root folder of your native files.
+
+3. Add the prop `playerStyle` to the player and set to the name of your css file without the .css file type e.g. `playerStyle={'myCssFile'}`.
+
+4. build & run.
 
 ##### Colors
 
@@ -384,9 +400,9 @@ colors: PropTypes.shape({
   icons: PropTypes.string,
   timeslider: PropTypes.shape({
     progress: PropTypes.string,
-    rail: PropTypes.string
-  })
-})
+    rail: PropTypes.string,
+  }),
+});
 ```
 
 ### Background Audio
@@ -395,7 +411,7 @@ This package supports Background audio sessions by setting the `backgroundAudioE
 
 Here for Android https://developer.jwplayer.com/sdk/android/docs/developer-guide/interaction/audio/ although this package handles background audio playing in android as is and you shouldn't have to make any additional changes.
 
-Here for iOS https://developer.jwplayer.com/sdk/ios/docs/developer-guide/embedding/features/ under Background Audio section. 
+Here for iOS https://developer.jwplayer.com/sdk/ios/docs/developer-guide/embedding/features/ under Background Audio section.
 
 For iOS you will have to enable `audio` in **Signing & Capabilities** under `background modes`.
 
@@ -413,19 +429,20 @@ Edit your `Info.plist` with the following values:
 'NSMicrophoneUsageDescription' => 'We will use your Microphone for media casting.'
 ```
 
-Enable *Access WiFi Information* capability under `Signing & Capabilities`
+Enable _Access WiFi Information_ capability under `Signing & Capabilities`
 
 #### Available methods
 
 | Func                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Argument                                                                                          |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| **`showAirPlayButton`** | Show an AirPlay button in the player. The autoHide variable will auto manage visibility to when the player controls are visible or not. *(Available on iOS)*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `{x: Double, y: Double, width: Double, height: Double, autoHide: Boolean}`                        |
-| **`hideAirPlayButton`** | Hides the AirPlay button in the player. *(Available on iOS)*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `none`                                                                                            |
+| **`showAirPlayButton`** | Show an AirPlay button in the player. The autoHide variable will auto manage visibility to when the player controls are visible or not. _(Available on iOS)_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `{x: Double, y: Double, width: Double, height: Double, autoHide: Boolean}`                        |
+| **`hideAirPlayButton`** | Hides the AirPlay button in the player. _(Available on iOS)_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `none`                                                                                            |
 | **`showCastButton`**    | This will enable the casting controller and show a cast button. You will need to follow the additional instruction to enable [Chrome Casting](#Casting). Check out the docs [iOS](https://developer.jwplayer.com/jwplayer/docs/ios-enable-casting-to-chromecast-devices#section-configure-and-enable-casting), [Android](https://developer.jwplayer.com/jwplayer/docs/android-enable-casting-to-chromecast-devices) for additional info. **Note** When not using a custom cast button we make use of the default cast button provided by the Cast SDK and on iOS it will be invisible if there are no available casting devices. You can also use [react-native-google-cast](https://github.com/react-native-google-cast/react-native-google-cast) instead. | `{x: Double, y: Double, width: Double, height: Double, autoHide: Boolean, customButton: Boolean}` |
 | **`hideCastButton`**    | Hides the cast button in the player.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `none`                                                                                            |
-| **`castState`**    | Gets the cast state.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `int` check out [GCKCastState](#GCKCastState)                                                                                            |
+| **`castState`**         | Gets the cast state.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `int` check out [GCKCastState](#GCKCastState)                                                     |
 
 ##### GCKCastState
+
 ```
 typedef NS_ENUM(NSUInteger, GCKCastState) {
   /** No Cast session is established, and no Cast devices are available. */
@@ -454,4 +471,3 @@ typedef NS_ENUM(NSUInteger, GCKCastState) {
 | **`onCastingFailed`**                  | Casting failed.                                       | `{error: Error}`                                  |
 
 #### [CHANGELOG](https://github.com/chaimPaneth/react-native-jw-media-player/releases)
-

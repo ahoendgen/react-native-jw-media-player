@@ -6,6 +6,11 @@ declare module "react-native-jw-media-player" {
     name?: string;
     identifier?: string;
   }
+  interface Drm {
+    licenseServer: string;
+    certificateServer: string;
+    contentId: string;
+  }
   interface PlaylistItem {
     mediaId?: number;
     startTime?: number;
@@ -34,6 +39,7 @@ declare module "react-native-jw-media-player" {
     repeat?: boolean;
     displayDescription?: boolean;
     displayTitle?: boolean;
+    drm?: Drm;
     playlistItem?: PlaylistItem;
     playlist?: PlaylistItem[];
     nextUpDisplay: boolean;
@@ -45,7 +51,7 @@ declare module "react-native-jw-media-player" {
     landscapeOnFullScreen: boolean;
     portraitOnExitFullScreen: boolean;
     exitFullScreenOnPortrait: boolean;
-    onPlaylist?: (playerlist: playlistItem[]) => void;
+    onPlaylist?: (playerlist: PlaylistItem[]) => void;
     onPlayerReady?: () => void;
     onBeforePlay?: () => void;
     onBeforeComplete?: () => void;

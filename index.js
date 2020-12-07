@@ -71,6 +71,11 @@ export default class JWPlayer extends Component {
     landscapeOnFullScreen: PropTypes.bool,
     portraitOnExitFullScreen: PropTypes.bool,
     exitFullScreenOnPortrait: PropTypes.bool,
+    drm: PropTypes.shape({
+      licenseServer: PropTypes.string.isRequired,
+      certificateServer: PropTypes.string.isRequired,
+      contentId: PropTypes.string.isRequired,
+    }),
     playlistItem: PropTypes.shape({
       file: PropTypes.string.isRequired,
       image: PropTypes.string,

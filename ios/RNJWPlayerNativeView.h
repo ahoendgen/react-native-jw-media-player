@@ -84,6 +84,8 @@
 @property(nonatomic, copy)RCTBubblingEventBlock onCastingEnded;
 @property(nonatomic, copy)RCTBubblingEventBlock onCastingFailed;
 
+@property(nonatomic)NSDictionary *drm;
+
 -(void)onRNJWReady;
 -(void)onRNJWPlaylist;
 -(void)onRNJWPlayerBeforePlay;

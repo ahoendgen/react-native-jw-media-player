@@ -22,22 +22,22 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:AVAudioSessionInterruptionNotification];
     } @catch(id anException) {
-       
+
     }
 }
 
 -(void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     if (self.player != nil) {
         self.player.view.frame = self.frame;
     }
-    
+
     if (_initFrame.size.height == 0) {
         _initFrame = self.frame;
     }
-    
+
     if (_nativeControlsView) {
         CGRect controlsFrame = CGRectMake(0, _player.view.frame.size.height - 124, _player.view.frame.size.width, 124);
         _nativeControlsView.frame = controlsFrame;
@@ -54,7 +54,7 @@
 -(JWConfig*)setupConfig
 {
     JWConfig *config = [JWConfig new];
-    
+
     if (!_nativeControls) {
         config.controls = YES;
     } else {
@@ -63,22 +63,22 @@
     config.repeat = NO;
     config.displayDescription = YES;
     config.displayTitle = YES;
-    
+
     return config;
 }
 
 - (void)initializeAudioSession
 {
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(audioSessionInterrupted:)
                                                  name: AVAudioSessionInterruptionNotification
                                                object: audioSession];
-    
+
     NSError *setCategoryError = nil;
     BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
-    
+
     NSError *activationError = nil;
     success = [audioSession setActive:YES error:&activationError];
 }
@@ -88,10 +88,10 @@
 -(void)customStyle: (JWConfig*)config :(NSString*)name
 {
     config.stretching = JWStretchingUniform;
-    
+
     JWSkinStyling *skinStyling = [JWSkinStyling new];
     config.skin = skinStyling;
-    
+
     skinStyling.url = [NSString stringWithFormat:@"file://%@", [[NSBundle mainBundle] pathForResource:name ofType:@"css"]];
     skinStyling.name = name;
 }
@@ -99,33 +99,33 @@
 -(UIColor*)colorWithHexString:(NSString*)hex
 {
     NSString *cString = [[hex stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
-    
+
     // String should be 6 or 8 characters
     if ([cString length] < 6) return [UIColor grayColor];
-    
+
     // strip 0X if it appears
     if ([cString hasPrefix:@"0X"]) cString = [cString substringFromIndex:2];
-    
+
     if ([cString length] != 6) return  [UIColor grayColor];
-    
+
     // Separate into r, g, b substrings
     NSRange range;
     range.location = 0;
     range.length = 2;
     NSString *rString = [cString substringWithRange:range];
-    
+
     range.location = 2;
     NSString *gString = [cString substringWithRange:range];
-    
+
     range.location = 4;
     NSString *bString = [cString substringWithRange:range];
-    
+
     // Scan values
     unsigned int r, g, b;
     [[NSScanner scannerWithString:rString] scanHexInt:&r];
     [[NSScanner scannerWithString:gString] scanHexInt:&g];
     [[NSScanner scannerWithString:bString] scanHexInt:&b];
-    
+
     return [UIColor colorWithRed:((float) r / 255.0f)
                            green:((float) g / 255.0f)
                             blue:((float) b / 255.0f)
@@ -136,7 +136,7 @@
 {
     if (colors != nil) {
         _playerColors = colors;
-        
+
         if (_player != nil) {
             [self setupColors:_player.config];
         }
@@ -147,33 +147,33 @@
 {
     if (_playerColors != nil) {
         config.stretching = JWStretchingUniform;
-        
+
         JWSkinStyling *skinStyling = [JWSkinStyling new];
         config.skin = skinStyling;
-        
+
         if ([_playerColors objectForKey:@"icons"] != nil) {
             id icons = [_playerColors objectForKey:@"icons"];
-            
+
             JWControlbarStyling *controlbarStyling = [JWControlbarStyling new];
             controlbarStyling.icons = [self colorWithHexString:icons];
             skinStyling.controlbar = controlbarStyling;
         }
-        
+
         if ([_playerColors objectForKey:@"timeslider"] != nil) {
             JWTimesliderStyling *timesliderStyling = [JWTimesliderStyling new];
-            
+
             id timeslider = [_playerColors objectForKey:@"timeslider"];
-            
+
             if ([timeslider objectForKey:@"progress"] != nil) {
                 id progress = [timeslider objectForKey:@"progress"];
                 timesliderStyling.progress = [self colorWithHexString:progress];
             }
-            
+
             if ([timeslider objectForKey:@"rail"] != nil) {
                 id rail = [timeslider objectForKey:@"rail"];
                 timesliderStyling.rail = [self colorWithHexString:rail];
             }
-            
+
             skinStyling.timeslider = timesliderStyling;
         }
     }
@@ -205,7 +205,7 @@
 -(void)setFullScreenOnLandscape:(BOOL)fullScreenOnLandscape
 {
     _fullScreenOnLandscape = fullScreenOnLandscape;
-    
+
     if (_player) {
         _player.forceFullScreenOnLandscape = fullScreenOnLandscape;
     }
@@ -214,7 +214,7 @@
 -(void)setLandscapeOnFullScreen:(BOOL)landscapeOnFullScreen
 {
     _landscapeOnFullScreen = landscapeOnFullScreen;
-    
+
     if (_player) {
         _player.forceLandscapeOnFullScreen = landscapeOnFullScreen;
     }
@@ -388,7 +388,7 @@
 -(void)setPlaylistItem:(NSDictionary *)playlistItem
 {
     NSString *newFile = [playlistItem objectForKey:@"file"];
-    
+
     if (newFile != nil && newFile.length > 0) {
         [self setPlaylist:@[playlistItem]];
     }
@@ -403,9 +403,9 @@
 -(JWPlaylistItem*)getPlaylistItem:item
 {
     JWPlaylistItem *playListItem = [JWPlaylistItem new];
-    
+
     NSString *newFile = [item objectForKey:@"file"];
-    
+
     NSURL* url = [NSURL URLWithString: newFile];
     if (url && url.scheme && url.host) {
         playListItem.file = newFile;
@@ -413,27 +413,27 @@
         NSString* encodedUrl = [newFile stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
         playListItem.file = encodedUrl;
     }
-    
+
     id mediaId = item[@"mediaId"];
     if ((mediaId != nil) && (mediaId != (id)[NSNull null])) {
         playListItem.mediaId = mediaId;
     }
-    
+
     id title = item[@"title"];
     if ((title != nil) && (title != (id)[NSNull null])) {
         playListItem.title = title;
     }
-    
+
     id desc = item[@"desc"];
     if ((desc != nil) && (desc != (id)[NSNull null])) {
         playListItem.desc = desc;
     }
-    
+
     id image = item[@"image"];
     if ((image != nil) && (image != (id)[NSNull null])) {
         playListItem.image = image;
     }
-    
+
     id startTime = item[@"startTime"];
     if ((startTime != nil) && (startTime != (id)[NSNull null])) {
         playListItem.startTime = [startTime floatValue];
@@ -455,7 +455,7 @@
     if (tracksArray.count > 0) {
         playListItem.tracks = tracksArray;
     }
-    
+
     NSMutableArray <JWAdBreak *> *adsArray = [[NSMutableArray alloc] init];
     id ads = item[@"adSchedule"];
     if(ads != nil) {
@@ -473,7 +473,7 @@
     if(adsArray.count > 0) {
         playListItem.adSchedule = adsArray;
     }
-    
+
     return playListItem;
 }
 
@@ -486,35 +486,35 @@
                 [self initializeAudioSession];
             }
         }
-        
+
         NSMutableArray <JWPlaylistItem *> *playlistArray = [[NSMutableArray alloc] init];
         for (id item in playlist) {
             JWPlaylistItem *playListItem = [self getPlaylistItem:item];
             [playlistArray addObject:playListItem];
         }
-        
+
         JWConfig *config = [self setupConfig];
-        
+
         if ([playlist[0] objectForKey:@"playerStyle"] != nil) {
             _playerStyle = [playlist[0] objectForKey:@"playerStyle"];
         }
-        
+
         if (_playerStyle != nil) {
             [self customStyle:config :_playerStyle];
         } else if (_playerColors != nil) {
             [self setupColors:config];
         }
-        
+
         if ([playlist[0] objectForKey:@"nextUpOffset"] != nil) {
             config.nextupOffset = [[playlist[0] objectForKey:@"nextUpOffset"] intValue];
         }
-        
+
         if ([playlist[0] objectForKey:@"autostart"] != nil) {
             config.autostart = [[playlist[0] objectForKey:@"autostart"] boolValue];
         }
-        
+
         JWAdConfig* advertising = [JWAdConfig new];
-        
+
         id adClient = [playlist[0] objectForKey:@"adClient"];
         if ((adClient != nil) && (adClient != (id)[NSNull null])) {
             switch ([adClient intValue]) {
@@ -527,7 +527,7 @@
                 case 3:
                     advertising.client = JWAdClientFreewheel;
                     break;
-                    
+
                 default:
                     advertising.client = JWAdClientVast;
                     break;
@@ -537,24 +537,26 @@
         }
 
         config.advertising = advertising;
-        
+
         if ([playlist[0] objectForKey:@"adVmap"] != nil) {
             id adVmap = [playlist[0] objectForKey:@"adVmap"];
             if ((adVmap != nil) && (adVmap != (id)[NSNull null])) {
                 config.advertising.adVmap = adVmap;
             }
         }
-        
+
         if (_player == nil || ![_player.config.playlist isEqualToArray:playlistArray]) {
             [self reset];
-            
+
             config.playlist = playlistArray;
-            
+
             _proxy = [RNJWPlayerDelegateProxy new];
             _proxy.delegate = self;
-            
+
             _player = [[JWPlayerController alloc] initWithConfig:config delegate:_proxy];
-            
+
+            _player.drmDataSource = self;
+
             if (!_nativeControls) {
                 _player.controls = YES;
                 _player.config.controls = YES;
@@ -563,13 +565,13 @@
                 _player.config.controls = NO;
                 [self setNativeControls:YES];
             }
-            
+
             [self setFullScreenOnLandscape:_fullScreenOnLandscape];
             [self setLandscapeOnFullScreen:_landscapeOnFullScreen];
-                    
+
             [self addSubview:self.player.view];
         } else {
-             [self continuePlaying];
+            [self continuePlaying];
         }
     } else {
         [self continuePlaying];
@@ -591,14 +593,14 @@
 {
     CGRect rect = CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height);
     self.frame = rect;
-    
+
     [self setBackgroundColor:[UIColor blackColor]];
 }
 
 -(void)shrink
 {
     self.frame = _initFrame;
-    
+
     [self setBackgroundColor:[UIColor whiteColor]];
 }
 
@@ -610,7 +612,7 @@
     if (UIDeviceOrientationIsPortrait(UIDevice.currentDevice.orientation)) {
         NSLog(@"Portrait");
     }
-    
+
     [self layoutSubviews];
 }
 
@@ -635,7 +637,7 @@
     if (self.onPlay) {
         self.onPlay(@{});
     }
-    
+
     _userPaused = NO;
     _wasInterrupted = NO;
 }
@@ -645,7 +647,7 @@
     if (self.onPause) {
         self.onPause(@{});
     }
-    
+
     if (!_wasInterrupted) {
         _userPaused = YES;
     }
@@ -674,34 +676,34 @@
         NSString *title = @"";
         NSString *desc = @"";
         NSNumber *index;
-        
+
         if (event.item.file != nil) {
             file = event.item.file;
         }
-        
+
         if (event.item.mediaId != nil) {
             mediaId = event.item.mediaId;
         }
-        
+
         if (event.item.title != nil) {
             title = event.item.title;
         }
-        
+
         if (event.item.desc != nil) {
             desc = event.item.desc;
         }
-        
+
         index = [NSNumber numberWithInteger: event.index];
-        
+
         NSMutableDictionary *playListItemDict = [[NSMutableDictionary alloc] init];
         [playListItemDict setObject:file forKey:@"file"];
         [playListItemDict setObject:mediaId forKey:@"mediaId"];
         [playListItemDict setObject:title forKey:@"title"];
         [playListItemDict setObject:desc forKey:@"desc"];
         [playListItemDict setObject:index forKey:@"index"];
-        
+
         NSData *data = [NSJSONSerialization dataWithJSONObject:playListItemDict options:NSJSONWritingPrettyPrinted error: &error];
-        
+
         self.onPlaylistItem(@{@"playlistItem": [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]});
     }
 }
@@ -725,7 +727,7 @@
     if (self.onTime) {
         self.onTime(@{@"position": @(event.position), @"duration": @(event.duration)});
     }
-    
+
     if (_nativeControls && _nativeControlsView) {
         [_nativeControlsView onTime:event];
     }
@@ -748,7 +750,7 @@
             self.onFullScreenExit(@{});
         }
     }
-    
+
     if (_nativeControls && _nativeControlsView) {
         [_nativeControlsView onFullScreen:event];
     }
@@ -760,7 +762,7 @@
         if (self.onFullScreenRequested) {
             self.onFullScreenRequested(@{});
         }
-        
+
         if (_nativeFullScreen) {
             [self explode];
         }
@@ -768,7 +770,7 @@
         if (self.onFullScreenExitRequested) {
             self.onFullScreenExitRequested(@{});
         }
-        
+
         if (_nativeFullScreen) {
             [self shrink];
         }
@@ -794,11 +796,11 @@
     if (self.onControlBarVisible) {
         self.onControlBarVisible(@{@"controls": @(event.controls)});
     }
-    
+
     if (_nativeControls && _nativeControlsView) {
         [_nativeControlsView toggleControlsViewVisible:event.controls];
     }
-    
+
     if (_autoHideAirPlay) {
         if (event.controls && [self viewWithTag:101] != nil) {
             CGRect frame = [self viewWithTag:101].frame;
@@ -807,14 +809,14 @@
             [self hideAirPlayButton];
         }
     }
-    
+
     if (_autoHideChromeCast) {
         if (event.controls) {
             if (self.castingButton != nil) {
                 CGRect frame = self.castingButton.frame;
                 [self showCastButton:frame.origin.x :frame.origin.y :frame.size.width :frame.size.height :_autoHideChromeCast :NO];
             }
-            
+
             if (self.customCastingButton != nil) {
                 CGRect frame = self.customCastingButton.frame;
                 [self showCastButton:frame.origin.x :frame.origin.y :frame.size.width :frame.size.height :_autoHideChromeCast :YES];
@@ -866,15 +868,15 @@
 
 -(void)audioSessionInterrupted:(NSNotification*)note
 {
-  if ([note.name isEqualToString:AVAudioSessionInterruptionNotification]) {
-    NSLog(@"Interruption notification");
-    
-    if ([[note.userInfo valueForKey:AVAudioSessionInterruptionTypeKey] isEqualToNumber:[NSNumber numberWithInt:AVAudioSessionInterruptionTypeBegan]]) {
-        [self audioInterruptionsStarted:note];
-    } else {
-      [self audioInterruptionsEnded:note];
+    if ([note.name isEqualToString:AVAudioSessionInterruptionNotification]) {
+        NSLog(@"Interruption notification");
+
+        if ([[note.userInfo valueForKey:AVAudioSessionInterruptionTypeKey] isEqualToNumber:[NSNumber numberWithInt:AVAudioSessionInterruptionTypeBegan]]) {
+            [self audioInterruptionsStarted:note];
+        } else {
+            [self audioInterruptionsEnded:note];
+        }
     }
-  }
 }
 
 -(void)audioInterruptionsStarted:(NSNotification *)note {
@@ -894,10 +896,10 @@
 {
     if ([self viewWithTag:101] == nil) {
         _autoHideAirPlay = autoHide;
-        
+
         UIView *buttonView = nil;
         CGRect buttonFrame = CGRectMake(x, y, width ? width : 44, height ? height : 44);
-        
+
         // It's highly recommended to use the AVRoutePickerView in order to avoid AirPlay issues after iOS 11.
         if (@available(iOS 11.0, *)) {
             AVRoutePickerView *airplayButton = [[AVRoutePickerView alloc] initWithFrame:buttonFrame];
@@ -966,7 +968,7 @@
         _castController.chromeCastReceiverAppID = kGCKDefaultMediaReceiverApplicationID;
         _castController.delegate = _proxy;
     }
-    
+
     [self scanForDevices];
 }
 
@@ -982,7 +984,7 @@
     if (self.castingButton != nil) {
         [self.castingButton setHidden:YES];
     }
-    
+
     if (self.customCastingButton != nil) {
         [self.customCastingButton setHidden:YES];
     }
@@ -992,9 +994,9 @@
 {
     if (self.customCastingButton != nil) {
         NSArray *connectingImages = @[[[UIImage imageNamed:@"cast_connecting0"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate],
-                                      [[UIImage imageNamed:@"cast_connecting1"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate],
-                                      [[UIImage imageNamed:@"cast_connecting2"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate],
-                                      [[UIImage imageNamed:@"cast_connecting1"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                [[UIImage imageNamed:@"cast_connecting1"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate],
+                [[UIImage imageNamed:@"cast_connecting2"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate],
+                [[UIImage imageNamed:@"cast_connecting1"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         self.customCastingButton.imageView.animationImages = connectingImages;
         self.customCastingButton.imageView.animationDuration = 2;
     }
@@ -1007,11 +1009,11 @@
                                                                              message:nil
                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
 //    alertController.popoverPresentationController.barButtonItem = self.castingItem;
-    
+
     if (self.castController.connectedDevice == nil) {
         if (self.castController.availableDevices.count > 0) {
             alertController.title = @"Connect to";
-            
+
             [self.castController.availableDevices enumerateObjectsUsingBlock:^(JWCastingDevice  *_Nonnull device, NSUInteger idx, BOOL * _Nonnull stop) {
                 UIAlertAction *deviceSelected = [UIAlertAction actionWithTitle:device.name
                                                                          style:UIAlertActionStyleDefault
@@ -1027,14 +1029,14 @@
     } else {
         alertController.title = self.castController.connectedDevice.name;
         alertController.message = @"Select an action";
-        
+
         UIAlertAction *disconnect = [UIAlertAction actionWithTitle:@"Disconnect"
                                                              style:UIAlertActionStyleDestructive
                                                            handler:^(UIAlertAction * _Nonnull action) {
                                                                [weakSelf.castController disconnect];
                                                            }];
         [alertController addAction:disconnect];
-        
+
         UIAlertAction *castControl;
         if (self.isCasting) {
             castControl = [UIAlertAction actionWithTitle:@"Stop Casting"
@@ -1051,11 +1053,11 @@
         }
         [alertController addAction:castControl];
     }
-    
+
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                            style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {}];
+                                                     style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {}];
     [alertController addAction:cancel];
-    
+
     UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
     [rootViewController presentViewController:alertController animated:YES completion:^{}];
 }
@@ -1148,13 +1150,13 @@
     } else if(devices.count == 0) {
         [self updateForCastDevicesUnavailable];
     }
-    
+
     if (self.onCastingDevicesAvailable) {
         NSMutableArray *devicesInfo = [[NSMutableArray alloc] init];
 
         for (JWCastingDevice *device in devices) {
             NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-                
+
             [dict setObject:device.name forKey:@"name"];
             [dict setObject:device.identifier forKey:@"identifier"];
 
@@ -1163,7 +1165,7 @@
 
         NSError *error;
         NSData *data = [NSJSONSerialization dataWithJSONObject:devicesInfo options:NSJSONWritingPrettyPrinted error: &error];
-        
+
         self.onCastingDevicesAvailable(@{@"devices": [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]});
     }
 }
@@ -1171,16 +1173,16 @@
 - (void)onRNJWConnectedToCastingDevice:(JWCastingDevice *)device
 {
     [self updateForCastDeviceConnection];
-    
+
     if (self.onConnectedToCastingDevice) {
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-            
+
         [dict setObject:device.name forKey:@"name"];
         [dict setObject:device.identifier forKey:@"identifier"];
 
         NSError *error;
         NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error: &error];
-        
+
         self.onConnectedToCastingDevice(@{@"device": [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]});
     }
 }
@@ -1188,7 +1190,7 @@
 - (void)onRNJWDisconnectedFromCastingDevice:(NSError *)error
 {
     [self updateForCastDeviceDisconnection];
-    
+
     if (self.onDisconnectedFromCastingDevice) {
         self.onDisconnectedFromCastingDevice(@{@"error": error});
     }
@@ -1197,7 +1199,7 @@
 - (void)onRNJWConnectionTemporarilySuspended
 {
     [self updateWhenConnectingToCastDevice];
-    
+
     if (self.onConnectionTemporarilySuspended) {
         self.onConnectionTemporarilySuspended(@{});
     }
@@ -1206,7 +1208,7 @@
 - (void)onRNJWConnectionRecovered
 {
     [self updateForCastDeviceConnection];
-    
+
     if (self.onConnectionRecovered) {
         self.onConnectionRecovered(@{});
     }
@@ -1215,7 +1217,7 @@
 - (void)onRNJWConnectionFailed:(NSError *)error
 {
     [self updateForCastDeviceDisconnection];
-    
+
     if (self.onConnectionFailed) {
         self.onConnectionFailed(@{@"error": error});
     }
@@ -1224,7 +1226,7 @@
 - (void)onRNJWCasting
 {
     [self updateForCasting];
-    
+
     if (self.onCasting) {
         self.onCasting(@{});
     }
@@ -1233,7 +1235,7 @@
 - (void)onRNJWCastingEnded:(NSError *)error
 {
     [self updateForCastingEnd];
-    
+
     if (self.onCastingEnded) {
         self.onCastingEnded(@{@"error": error});
     }
@@ -1242,7 +1244,7 @@
 - (void)onRNJWCastingFailed:(NSError *)error
 {
     [self updateForCastingEnd];
-    
+
     if (self.onCastingFailed) {
         self.onCastingFailed(@{@"error": error});
     }
@@ -1254,25 +1256,25 @@
 {
     if (self.customCastingButton != nil)
         [self.customCastingButton setTintColor:[UIColor whiteColor]];
-        [self.customCastingButton.imageView startAnimating];
+    [self.customCastingButton.imageView startAnimating];
 }
 
 - (void)updateForCastDeviceConnection
 {
     if (self.customCastingButton != nil)
         [self.customCastingButton.imageView stopAnimating];
-        [self.customCastingButton setImage:[[UIImage imageNamed:@"cast_on"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                            forState:UIControlStateNormal];
-        [self.customCastingButton setTintColor:[UIColor blueColor]];
+    [self.customCastingButton setImage:[[UIImage imageNamed:@"cast_on"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                              forState:UIControlStateNormal];
+    [self.customCastingButton setTintColor:[UIColor blueColor]];
 }
 
 - (void)updateForCastDevicesUnavailable
 {
     if (self.customCastingButton != nil)
         [self.customCastingButton.imageView stopAnimating];
-        [self.customCastingButton setImage:[[UIImage imageNamed:@"cast_off"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                            forState:UIControlStateNormal];
-        [self.customCastingButton setTintColor:[UIColor grayColor]];
+    [self.customCastingButton setImage:[[UIImage imageNamed:@"cast_off"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                              forState:UIControlStateNormal];
+    [self.customCastingButton setTintColor:[UIColor grayColor]];
 //    [self.customCastingButton setEnabled:NO];
 }
 
@@ -1280,9 +1282,9 @@
 {
     if (self.customCastingButton != nil)
         [self.customCastingButton.imageView stopAnimating];
-        [self.customCastingButton setImage:[[UIImage imageNamed:@"cast_off"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                            forState:UIControlStateNormal];
-        [self.customCastingButton setTintColor:[UIColor whiteColor]];
+    [self.customCastingButton setImage:[[UIImage imageNamed:@"cast_off"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                              forState:UIControlStateNormal];
+    [self.customCastingButton setTintColor:[UIColor whiteColor]];
 }
 
 - (void)updateForCasting
@@ -1297,6 +1299,62 @@
     self.isCasting = NO;
     if (self.customCastingButton != nil)
         [self.customCastingButton setTintColor:[UIColor blueColor]];
+}
+
+#pragma DRM
+
+- (void)fetchContentIdentifierForRequest:(NSURL *)loadingRequestURL forEncryption:(JWEncryption)encryption withCompletion:(void (^)(NSData *))completion
+{
+    if(encryption == JWEncryptionFairPlay) {
+        NSString *assetId = self.drm[@"assetId"];
+        NSData *assetIdData = [NSData dataWithBytes: [assetId cStringUsingEncoding:NSUTF8StringEncoding]
+                                             length: [assetId lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
+        completion(assetIdData);
+    }
+}
+
+- (void)fetchAppIdentifierForRequest:(NSURL *)loadingRequestURL forEncryption:(JWEncryption)encryption withCompletion:(void (^)(NSData *))completion
+{
+    if (encryption == JWEncryptionFairPlay) {
+        NSString *certificateServerUrl = self.drm[@"certificateServer"];
+
+        NSURL *certificateServer = [NSURL URLWithString:certificateServerUrl];
+
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:certificateServer];
+        [request setHTTPMethod:@"GET"];
+
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:NSURLSessionConfiguration .defaultSessionConfiguration];
+
+        NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            completion(data);
+        }];
+
+        [dataTask resume];
+
+    }
+}
+
+- (void)fetchContentKeyWithRequest:(NSData *)requestBytes forEncryption:(JWEncryption)encryption withCompletion:(void (^)(NSData *, NSDate *, NSString *))completion
+{
+    if(encryption == JWEncryptionFairPlay) {
+
+        NSString *keyServerUrl = self.drm[@"licenseServer"];
+
+        NSURL *keyServer = [NSURL URLWithString:keyServerUrl];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:keyServer];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-type"];
+        [request setHTTPBody:requestBytes];
+
+
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:NSURLSessionConfiguration .defaultSessionConfiguration];
+
+        NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            completion(data, [NSDate distantFuture], @"application/octet-stream");
+        }];
+
+        [dataTask resume];
+    }
 }
 
 @end
