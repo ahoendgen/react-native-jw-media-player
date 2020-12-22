@@ -180,8 +180,18 @@ public class RNJWPlayerViewManager extends SimpleViewManager<RNJWPlayerView> {
     }
   }
 
+  @ReactProp(name = "drm")
+  public void setDrm(RNJWPlayerView view, ReadableMap prop) {
+    view.setDrm(prop);
+  }
+
   @ReactProp(name = "playlistItem")
   public void setPlaylistItem(RNJWPlayerView view, ReadableMap prop) {
+
+    if(prop.hasKey("drm")) {
+      view.setDrm(prop.getMap("drm"));
+    }
+
     view.setPlaylistItem(prop);
   }
 
