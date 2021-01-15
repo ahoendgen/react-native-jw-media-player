@@ -659,16 +659,20 @@ public class RNJWPlayerView extends RelativeLayout implements
       }
     }
 
-    PlaylistItem newPlayListItem = new PlaylistItem.Builder()
+    PlaylistItem.Builder newPlayListItemBuilder = new PlaylistItem.Builder()
       .file(file)
       .title(title)
       .description(desc)
       .image(image)
       .mediaId(mediaId)
-      .mediaDrmCallback(new WidevineMediaDrmCallback(drm.getString("licenseServer")))
       .adSchedule(adSchedule)
-      .tracks(tracks)
-      .build();
+      .tracks(tracks);
+
+    if(drm != null) {
+      newPlayListItemBuilder.mediaDrmCallback(new WidevineMediaDrmCallback(drm.getString("licenseServer")));
+    }
+
+    PlaylistItem newPlayListItem = newPlayListItemBuilder.build();
 
     if (startTime != null) {
       newPlayListItem.setStartTime(startTime);
